@@ -2,7 +2,34 @@ import { createContext, useState, useEffect } from 'react';
 
 export const ShoppingCardContext = createContext()
 
+export const initializeLocalStorage = () => {
+  const accountInLocalStorage = localStorage.getItem('account')
+  const signOutInLocalStorage = localStorage.getItem('sign-out')
+  let parsedAccount
+  let parsedSignOut
+
+  if (!accountInLocalStorage ) {
+    localStorage.setItem('account', JSON.stringify({}))
+    parsedAccount = {}
+  } else {
+    parsedAccount = JSON.parse(accountInLocalStorage)
+  }
+
+  if (!signOutInLocalStorage) {
+    localStorage.setItem('sign-out', JSON.stringify(false))
+  }else {
+    parsedSignOut = JSON.parse(signOutInLocalStorage)
+  }
+}
+
 export const ShoppingCardProvider = ({children}) => {
+  //my account 
+    const [account, seAccount] = useState({})
+
+// sin-out
+    const [signOut, setSignOut] = useState(false)
+
+
 // shopping card increment
     const [count, setCount] = useState(0)
 
@@ -101,7 +128,11 @@ export const ShoppingCardProvider = ({children}) => {
             filteredItems,
             setFilteredItems,
             SearchByCategory,
-            setSearchByCategory
+            setSearchByCategory,
+            account,
+            seAccount,
+            signOut,
+            setSignOut
             
         }}>
             {children}            
