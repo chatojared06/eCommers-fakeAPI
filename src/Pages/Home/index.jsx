@@ -17,7 +17,7 @@ function Home () {
     )
   } else {
     return (
-      <div className='flex flex-row items-center font-medium text-xl '> We don't have anything :( </div>
+      <div className='flex flex-row items-center font-medium text-xl '> We do not have anything :( </div>
     )
   }
 }
@@ -31,7 +31,7 @@ function Home () {
       <input 
       type="text"
       placeholder='Search a product' 
-      className='rounded-2xl bg-slate-200 w-80 p-4 mb-4 focus:outline-none'
+      className='rounded-lg bg-slate-200 w-80 p-4 mb-4 focus:outline-none'
       onChange={(event) => context.setSearchByTitle(event.target.value)}/>
       <div className='grid gap-4 grid-cols-4 w-full max-w-screen-lg'>
       {renderView()}
