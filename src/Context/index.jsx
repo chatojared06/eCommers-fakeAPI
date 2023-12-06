@@ -24,7 +24,7 @@ export const initializeLocalStorage = () => {
 
 export const ShoppingCardProvider = ({children}) => {
   //my account 
-    const [account, seAccount] = useState({})
+    const [account, setAccount] = useState({})
 
 // sin-out
     const [signOut, setSignOut] = useState(false)
@@ -130,7 +130,7 @@ export const ShoppingCardProvider = ({children}) => {
             SearchByCategory,
             setSearchByCategory,
             account,
-            seAccount,
+            setAccount,
             signOut,
             setSignOut
             

@@ -1,11 +1,12 @@
-import { useContext, useState } from "react"
-import { Link } from "react-router-dom"
+import { useContext, useState, useRef } from "react"
+import { Link, Navigate } from "react-router-dom"
 import { ShoppingCardProvider } from "../../Context"
 import Layout from "../../Componets/Layout"
 
 function SignIn () {
     const context = useContext (ShoppingCardProvider)
     const [view, setView] = useState('user-info')
+    const form = useRef(null)
     
     //Account
     const account = localStorage.getItem('account')
@@ -14,6 +15,30 @@ function SignIn () {
     const noAccountInLocalStorage = parsedAccount ? Object.keys(parsedAccount).length === 0 : true   
     const noAccountInLocalState = context && context.account ? Object.keys(context.account).length === 0 : true
     const hasUserAnAccount = !noAccountInLocalStorage || !noAccountInLocalState 
+
+    const handleSignIn =() => {
+        const strigifiedSignOut = JSON.stringify(false)
+        localStorage.setItem('sign-out', strigifiedSignOut)
+        context.setSignOut(false)
+
+        return <Navigate replace to={'/'}/>
+    }
+
+    const createAnAccount = () => {
+		const formData = new FormData(form.current)
+		const data = {
+			name: formData.get('name'),
+			email: formData.get('email'),
+			password: formData.get('password')
+		}
+
+        const stringifiedAcconut = JSON.stringify(data)
+        localStorage.setItem('account', stringifiedAcconut)
+        context.setAccount(data)
+
+        handleSignIn()
+	}
+
 
     const renderLogIn = () => {
         return (
@@ -32,6 +57,7 @@ function SignIn () {
                     <button
                         className='bg-black disabled:bg-black/40 text-white w-full rounded-lg py-3 mt-4 mb-2'
                         disabled={!hasUserAnAccount}
+                        onClick={() => handleSignIn()}
                     >
                         Log in
                     </button>
@@ -51,25 +77,47 @@ function SignIn () {
     }
     const renderCreateUserInfo = () => {
         return (
-            <div>
-                <h1 className='font-medium text-xl text-center mb-6 w-80'>Sign Up</h1>
-                <p className='flex flex-col'>
-                    <span className='mt-4 mb-4 text-lg font-semibold '>Email address</span>
-                    <input type="text" 
-                    placeholder="example@gmail.com"
-                    className=" rounded-lg bg-slate-200 w-80 p-4 mb-4 focus:outline-none text-lg " />
-                </p>
-                <p className='flex flex-col'>
-                    <span className='text-lg font-semibold '>Password *</span>
-                    <input type="text" 
-                    placeholder="********"
-                    className=" rounded-lg bg-slate-200 w-80 p-4 mt-4 mb-4 focus:outline-none text-lg " />
-                    <span className='text-xs mb-4'>* The password must contain: uppercase, lowercase and characters</span>
-                </p> 
-                <button className='mt-10 bg-black disabled:bg-black/40 text-white w-full rounded-lg py-3 '>
-                        Sign in
-                </button>
-            </div>
+            <form ref={form} className="flex flex-col gap-4 w-80">
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="name" className="mb-2 mt-2 text-lg font-semibold" >Your name:</label>
+                    <input 
+                    type="text"
+                    id="name" 
+                    name="name"
+                    defaultValue={parsedAccount?.name}
+                    placeholder="Oscar"
+                    className="rounded-lg bg-slate-200 w-80 p-4 focus:outline-none text-lg"/>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="email" className="mb-2 mt-2 text-lg font-semibold" >Your email:</label>
+                        <input 
+                        type="text"
+                        id="email"
+                        name="email"
+                        defaultValue={parsedAccount?.email} 
+                        placeholder="example@gmail.com"
+                        className="rounded-lg bg-slate-200 w-80 p-4 focus:outline-none text-lg"/>
+
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="password" className="mb-2 mt-2 text-lg font-semibold" >Your password:</label>
+                        <input
+                        type="text"
+                        id="password"
+                        name="password"
+                        defaultValue={parsedAccount?.password} 
+                        placeholder="********"
+                        className="rounded-lg bg-slate-200 w-80 p-4 focus:outline-none text-lg"/>
+                </div>
+                <Link to="/" >
+                    <button 
+                    className="bg-black text-white w-full rounded-lg py-3"
+                    onClick={() => createAnAccount()}>
+                        Create
+                    </button>
+                </Link>
+
+            </form>
         ) 
     }
     const renderView = () => view === 'create-user-info' ? renderCreateUserInfo() : renderLogIn()
