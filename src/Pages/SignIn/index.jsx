@@ -1,10 +1,10 @@
 import { useContext, useState, useRef } from "react"
-import { Link, Navigate } from "react-router-dom"
-import { ShoppingCardProvider } from "../../Context"
+import { Link, Navigate,  } from "react-router-dom"
+import { ShoppingCardContext } from "../../Context"
 import Layout from "../../Componets/Layout"
 
 function SignIn () {
-    const context = useContext (ShoppingCardProvider)
+    const context = useContext (ShoppingCardContext)
     const [view, setView] = useState('user-info')
     const form = useRef(null)
     
